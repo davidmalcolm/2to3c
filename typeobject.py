@@ -7,18 +7,18 @@ req_ws = r'\s+'
 opt_ws = r'\s*'
 c_identifier = r'([_A-Za-z][_0-9A-Za-z]*)'
 
-pat = (r'PyTypeObject' + req_ws
+pat = ('.*' + r'PyTypeObject' + req_ws
        + c_identifier + opt_ws 
        + r'=' + opt_ws + r'\{' + opt_ws 
        + r'(PyObject_HEAD_INIT\((.*)\)' + opt_ws 
-       + r'([0-9]+)' + opt_ws + r',)'
+       + r'([0-9]+)' + opt_ws + r',).*'
        )
 
 def fixup_typeobject_initializers(content):
     while True:
-        m = re.match(pat, content)
+        m = re.match(pat, content, re.DOTALL)
         if m:
-            if True:
+            if False:
                 print m.groups()
                 print m.group(2)
                 print m.group(3)
@@ -33,13 +33,15 @@ def fixup_typeobject_initializers(content):
 import unittest
 class TestFixups(unittest.TestCase):
     def test_fixups(self):
-        self.assertEquals(fixup_typeobject_initializers('''PyTypeObject DBusPyIntBase_Type = {
+        self.assertEquals(fixup_typeobject_initializers('''
+PyTypeObject DBusPyIntBase_Type = {
     PyObject_HEAD_INIT(DEFERRED_ADDRESS(&PyType_Type))
     0,
     "_dbus_bindings._IntBase",
 '''
                                                         ),
-                          '''PyTypeObject DBusPyIntBase_Type = {
+                          '''
+PyTypeObject DBusPyIntBase_Type = {
     PyVarObject_HEAD_INIT(DEFERRED_ADDRESS(&PyType_Type), 0)
     "_dbus_bindings._IntBase",
 '''
