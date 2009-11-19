@@ -75,3 +75,8 @@ expression E1;
 @@
 -PyNumber_Int(E1)
 +PyNumber_Long(E1)
+
+@@
+@@
+-PyInt_Type
++PyLong_Type
