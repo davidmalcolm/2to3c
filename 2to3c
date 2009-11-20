@@ -4,7 +4,8 @@ def get_fixers():
     from fixes.typeobject import FixTypeobjectInitializers
     from fixes import CocciFix
     fixes = [FixTypeobjectInitializers()]
-    for filename in ['RO.cocci', 'int-to-long.cocci', 'ob_type.cocci', 'repr.cocci']:
+    for filename in ['RO.cocci', 'int-to-long.cocci', 'ob_type.cocci', 
+                     'repr.cocci', 'init-module.cocci']:
         fixes.append(CocciFix(filename))
     return fixes
 
