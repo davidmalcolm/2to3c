@@ -1,6 +1,11 @@
 import sys
 import re
-from difflib import unified_diff
+
+# I wasn't able to express this refactoring in SmPLs; the implied comma embedded
+# in the _HEAD_INIT macros seems to be too much for spatch to reasonably deal
+# with.
+
+# So I expressed this one as a regex.
 
 # Whitespace patterns:
 req_ws = r'\s+'
@@ -46,21 +51,5 @@ PyTypeObject DBusPyIntBase_Type = {
     "_dbus_bindings._IntBase",
 '''
                           )
-
-
-def fixup_file(filename, options):
-    content = open(filename, 'r').read()        
-    fixed_content = fixup_typeobject_initializers(content)
-    if content != fixed_content:
-        for line in unified_diff(content.splitlines(),
-                                 fixed_content.splitlines(), 
-                                 fromfile = filename+'.orig',
-                                 tofile = filename,
-                                 lineterm=''):
-            print line
-
-        if options.write:
-            open(filename, 'w').write(fixed_content)
-
 if __name__ == '__main__':
     unittest.main()
