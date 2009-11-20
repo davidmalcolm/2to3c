@@ -1,13 +1,17 @@
 #!/usr/bin/env python
 
 def get_fixers():
-    from fixes.typeobject import fixup_typeobject_initializers
-    return [fixup_typeobject_initializers]
+    from fixes.typeobject import FixTypeobjectInitializers
+    from fixes import CocciFix
+    fixes = [FixTypeobjectInitializers()]
+    for filename in ['RO.cocci', 'int-to-long.cocci', 'ob_type.cocci', 'repr.cocci']:
+        fixes.append(CocciFix(filename))
+    return fixes
 
 def fixup_content(content):
     # Apply the various fixers, in turn:
     for fixer in get_fixers():
-        content = fixer(content)
+        content = fixer.transform(content)
     return content
 
 

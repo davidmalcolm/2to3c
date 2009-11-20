@@ -35,6 +35,11 @@ def fixup_typeobject_initializers(content):
         else:
             return content
 
+from fixes import Fix
+class FixTypeobjectInitializers(Fix):
+    def transform(self, string):
+        return fixup_typeobject_initializers(string)
+
 import unittest
 class TestFixups(unittest.TestCase):
     def test_fixups(self):
