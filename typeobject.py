@@ -61,22 +61,6 @@ def fixup_file(filename, options):
 
         if options.write:
             open(filename, 'w').write(fixed_content)
-        
-def main():
-    from optparse import OptionParser
-    usage = "usage: %prog [options] filenames..."
-    parser = OptionParser(usage=usage)
-    parser.add_option('-w', '--write',
-                      action="store_true", dest="write", default=False,
-                      help="Write back modified files")
-    (options, args) = parser.parse_args()
-    # print (options, args)
-    for filename in args:
-        fixup_file(filename, options)
 
 if __name__ == '__main__':
-    if len(sys.argv) == 1:
-        unittest.main()
-    else:
-        main()
-
+    unittest.main()
