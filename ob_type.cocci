@@ -18,3 +18,10 @@ T non_py_obj_ptr;
 @@
 - non_py_obj_ptr->F.ob_type
 + Py_TYPE(non_py_obj_ptr) 
+
+@@
+PyTypeObject typeobj;
+@@
+- typeobj.ob_type
++ Py_TYPE(&typeobj)
+
