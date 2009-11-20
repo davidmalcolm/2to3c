@@ -1,7 +1,19 @@
-@@
+@ mod_init_fn @
 type T;
 identifier FN;
 identifier MOD_VAR;
+expression MODULE_NAME, MODULE_METHODS, MODULE_DOC;
+@@
+T FN(void) {
+   ...
+   MOD_VAR = Py_InitModule3(MODULE_NAME, MODULE_METHODS, MODULE_DOC);
+   ...
+}
+
+@@
+type mod_init_fn.T;
+identifier  mod_init_fn.FN;
+identifier  mod_init_fn.MOD_VAR;
 expression MODULE_NAME, MODULE_METHODS, MODULE_DOC;
 @@
 + #if PY_MAJOR_VERSION >= 3
@@ -16,7 +28,9 @@ expression MODULE_NAME, MODULE_METHODS, MODULE_DOC;
 +        NULL,        /* m_clear */
 +        NULL,        /* m_free */
 +};
-+ #endif
++#define MOD_ERROR_VAL NULL
++#else
++#endif
 
 T FN(void) {
    ...
@@ -28,4 +42,31 @@ T FN(void) {
 + #endif
 
     ...
+}
+
+
+
+@@
+type mod_init_fn.T;
+identifier mod_init_fn.FN;
+expression E;
+@@
+T FN(void) {
+   ...
+-  if (E) return;
++  if (E) return MOD_ERROR_VAL;
+   ...
+}
+
+@@
+type mod_init_fn.T;
+identifier mod_init_fn.FN;
+identifier mod_init_fn.MOD_VAR;
+@@
+T FN(void) {
+   ...
+-  return;
++ #if PY_MAJOR_VERSION >= 3
++  return MOD_VAR;
++ #endif
 }
