@@ -35,26 +35,43 @@ def fixup_typeobject_initializers(content):
         else:
             return content
 
-from fixes import Fix
+from fixes import Fix, FixTest
 class FixTypeobjectInitializers(Fix):
     def transform(self, string):
         return fixup_typeobject_initializers(string)
 
 import unittest
-class TestFixups(unittest.TestCase):
+class TestFixups(FixTest):
+    def setUp(self):
+        self.fixer = FixTypeobjectInitializers()
+
     def test_fixups(self):
-        self.assertEquals(fixup_typeobject_initializers('''
+        self.assertTransformsTo(self.fixer,
+                                '''
 PyTypeObject DBusPyIntBase_Type = {
     PyObject_HEAD_INIT(DEFERRED_ADDRESS(&PyType_Type))
     0,
     "_dbus_bindings._IntBase",
-'''
-                                                        ),
+''',
                           '''
 PyTypeObject DBusPyIntBase_Type = {
     PyVarObject_HEAD_INIT(DEFERRED_ADDRESS(&PyType_Type), 0)
     "_dbus_bindings._IntBase",
-'''
-                          )
+''')
+
+    def test_fixup_with_comment(self):
+        self.assertTransformsTo(self.fixer,
+                                '''
+PyTypeObject PyFortran_Type = {
+    PyObject_HEAD_INIT(0)
+    0,                    /*ob_size*/
+    "fortran",                    /*tp_name*/
+''',
+                                '''
+PyTypeObject PyFortran_Type = {
+    PyVarObject_HEAD_INIT(0, 0)                    /*ob_size*/
+    "fortran",                    /*tp_name*/
+''')
+
 if __name__ == '__main__':
     unittest.main()
