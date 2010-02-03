@@ -3,10 +3,12 @@
 def get_fixers():
     from fixes.typeobject import FixTypeobjectInitializers
     from fixes import CocciFix
+    from fixes.initmodule import FixInitModule
     fixes = [FixTypeobjectInitializers()]
     for filename in ['RO.cocci', 'int-to-long.cocci', 'ob_type.cocci', 
-                     'repr.cocci', 'init-module.cocci']:
+                     'repr.cocci']:
         fixes.append(CocciFix(filename))
+    fixes.append(FixInitModule())
     return fixes
 
 def fixup_content(content):

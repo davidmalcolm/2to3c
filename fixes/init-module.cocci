@@ -10,13 +10,43 @@ T FN(void) {
    ...
 }
 
+
+
+@@
+identifier MOD_VAR;
+expression MODULE_NAME, MODULE_METHODS, MODULE_DOC;
+expression E;
+@@
+   if (E) {
+-     return;
++     return MOD_ERROR_VAL;
+   }
+   ...
+   MOD_VAR = Py_InitModule3(MODULE_NAME, MODULE_METHODS, MODULE_DOC); 
+
+
+@@
+identifier MOD_VAR;
+expression MODULE_NAME, MODULE_METHODS, MODULE_DOC;
+expression E;
+@@
+   MOD_VAR = Py_InitModule3(MODULE_NAME, MODULE_METHODS, MODULE_DOC); 
+   ...
+   if (E) {
+-     return;
++     return MOD_ERROR_VAL;
+   }
+
+
 @@
 type mod_init_fn.T;
 identifier  mod_init_fn.FN;
 identifier  mod_init_fn.MOD_VAR;
 expression MODULE_NAME, MODULE_METHODS, MODULE_DOC;
+expression E;
+statement list SL;
 @@
-+ #if PY_MAJOR_VERSION >= 3
++struct __HASH_IF_PY_MAJOR_VERSION_ge_3;
 +static struct PyModuleDef moduledef = {
 +        PyModuleDef_HEAD_INIT,
 +        MODULE_NAME,     /* m_name */
@@ -28,45 +58,21 @@ expression MODULE_NAME, MODULE_METHODS, MODULE_DOC;
 +        NULL,        /* m_clear */
 +        NULL,        /* m_free */
 +};
-+#define MOD_ERROR_VAL NULL
-+#else
-+#endif
++struct __HASH_DEFINE__MOD_ERROR_VAL__NULL;
++struct __HASH_ELSE;
++struct __HASH_DEFINE__MOD_ERROR_VAL__;
++struct __HASH_ENDIF;
 
-T FN(void) {
+ T FN(void) {
    ...
 
-+ #if PY_MAJOR_VERSION >= 3
++__HASH_IF_PY_MAJOR_VERSION_ge_3;
 +    MOD_VAR = PyModule_Create(&moduledef);
-+ #else
++__HASH_ELSE;
      MOD_VAR = Py_InitModule3(MODULE_NAME, MODULE_METHODS, MODULE_DOC);
-+ #endif
++__HASH_ENDIF;
 
-    ...
-}
-
-
-
-@@
-type mod_init_fn.T;
-identifier mod_init_fn.FN;
-expression E;
-@@
-T FN(void) {
    ...
--  if (E) return;
-+  if (E) return MOD_ERROR_VAL;
-   ...
-}
+ }
 
-@@
-type mod_init_fn.T;
-identifier mod_init_fn.FN;
-identifier mod_init_fn.MOD_VAR;
-@@
-T FN(void) {
-   ...
--  return;
-+ #if PY_MAJOR_VERSION >= 3
-+  return MOD_VAR;
-+ #endif
-}
+
